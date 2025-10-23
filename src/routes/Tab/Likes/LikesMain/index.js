@@ -84,14 +84,16 @@ const LikesMain = ({navigation}) => {
           gap: 20 
         }}>
           <StyledTextDynamic text={"Profilinizi\nBeğenenler"}></StyledTextDynamic>
-          <TextButton 
-            padding={10} 
-            height={40} 
-            backgroundColor={theme.colors.primary}
-            onPress={() => console.log('Premium membership pressed')}
-          >
-            <StyledText bold caption>Premium Üyelik Al</StyledText>
-          </TextButton>
+          {!isPremium && (
+            <TextButton 
+              padding={10} 
+              height={40} 
+              backgroundColor={theme.colors.primary}
+              onPress={() => navigation.navigate('ProfileStack', { screen: 'SubscriptionFeatures' })}
+            >
+              <StyledText bold caption>Premium Üyelik Al</StyledText>
+            </TextButton>
+          )}
         </View>
 
         <View style={styles.container}>

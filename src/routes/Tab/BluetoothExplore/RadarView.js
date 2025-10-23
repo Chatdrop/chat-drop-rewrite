@@ -76,7 +76,7 @@ const RadarView = memo(({ devices }) => {
     }, [devices]);
 
     return (
-        <View style={styles.radarContainer}>
+        <View style={styles.radarContainer} pointerEvents="box-none">
             {devicePositions.map((position) => (
                 <DeviceCircle
                     key={position.id}

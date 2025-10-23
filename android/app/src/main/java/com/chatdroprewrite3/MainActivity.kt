@@ -1,5 +1,6 @@
 package com.chatdroprewrite3
 
+import android.os.Bundle
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -12,6 +13,15 @@ class MainActivity : ReactActivity() {
    * rendering of the component.
    */
   override fun getMainComponentName(): String = "ChatDropRewrite3"
+
+  /**
+   * Called when the activity is starting. Switch from splash theme to app theme.
+   */
+  override fun onCreate(savedInstanceState: Bundle?) {
+    // Switch from SplashTheme to AppTheme before super.onCreate
+    setTheme(R.style.AppTheme)
+    super.onCreate(savedInstanceState)
+  }
 
   /**
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]

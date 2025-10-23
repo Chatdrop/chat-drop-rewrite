@@ -3,7 +3,7 @@ import { styleConstants } from "../../../../../../config/styleConstants";
 
 export default cardListStyles = StyleSheet.create({
     card: {
-        borderWidth: 5,
+        borderWidth: 2.5,
         borderColor: '#00000000',
         shadowColor: '#000',
         width: '45%', // Two cards fit side by side
@@ -16,7 +16,7 @@ export default cardListStyles = StyleSheet.create({
         width: '100%',
         height: '100%',
         resizeMode: 'cover',
-        borderRadius: 30,
+        borderRadius: 27.5,
     },
     buttonContainer: {
         width: '100%',

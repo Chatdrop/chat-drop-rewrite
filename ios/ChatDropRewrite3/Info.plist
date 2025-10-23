@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>ChatDropRewrite3</string>
+	<string>Chatdrop</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,6 +46,12 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ChatDrop, profil fotoğraflarınızı yüklemek için fotoğraf galerinize erişmek istiyor.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>ChatDrop, fotoğrafları kaydetmek için fotoğraf galerinize erişmek istiyor.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>ChatDrop, profil fotoğrafı çekmek için kameranıza erişmek istiyor.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

@@ -69,7 +69,7 @@ const Swiper = ({
 
         Animated.timing(animVal, {
             toValue: {x: isLeft ? -dims.width*1.5 : dims.width*1.5, y: 0},
-            duration: 100,
+            duration: 1500,  // Like animasyonunu görmek için süreyi uzattık
             useNativeDriver: true
         }).start(()=>{
             setActiveIdx(panEvents.activeIdx+1);

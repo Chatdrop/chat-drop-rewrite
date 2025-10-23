@@ -7,6 +7,7 @@ import XSvg from '../../../../../assets/svg/x.svg';
 import CheckSvg from '../../../../../assets/svg/check.svg';
 
 export default function ChatRequest(props = {
+  id: null,
   name: "Kullanıcı Ad-soyad",
   message: "Kullanıcı mesajı",
   photo: null,
@@ -56,14 +57,14 @@ export default function ChatRequest(props = {
         </StyledText>
       </View>
       
-      <View style={{ paddingBottom: 10 }}>
+      <View style={{ paddingBottom: 5 }}>
         <StyledText
           style={{
             fontSize: 14,
             fontWeight: "500",
           }}
         >
-          {props.message}
+          {props.message.length > 20 ? props.message.substring(0, 20) + '...' : props.message}
         </StyledText>
       </View>
       
@@ -71,11 +72,12 @@ export default function ChatRequest(props = {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: 10,
+        marginTop: 5,
       }}>
         <RoundButton
           size={50}
           iconSize={20}
+          color="black"
           backgroundColor="white"
           Icon={XSvg}
           onPress={props.onReject}
@@ -85,6 +87,7 @@ export default function ChatRequest(props = {
           iconSize={30}
           color="white"
           backgroundColor="black"
+          borderWidth={0}
           Icon={CheckSvg}
           onPress={props.onAccept}
         />

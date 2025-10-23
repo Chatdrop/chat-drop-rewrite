@@ -33,12 +33,13 @@ export default function ChatListItem(props = {
         marginBottom: 10
       }}
     >
-      <View style={{ width: 50, height: 50, borderRadius: 25, overflow: "hidden" }}>
-        <Image 
-          source={{ uri: props.photo_url }} 
-          style={{ width: "100%", height: "100%" }} 
-          defaultSource={require("../../../../../assets/png/friendship.png")}
-        />
+      <View style={{ width: 50, height: 50, borderRadius: 25, overflow: "hidden", backgroundColor: theme.colors.lightGrey }}>
+        {props.photo_url ? (
+          <Image 
+            source={props.photo_url} 
+            style={{ width: "100%", height: "100%" }} 
+          />
+        ) : null}
       </View>
       <View style={{ flex: 1, margin: 5, marginHorizontal: 10 }}>
         <View style={{ flex: 1 }}>

@@ -2,7 +2,6 @@ import React from 'react';
 import { View, TouchableOpacity, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
-import StyledText from '../../components/StyledText';
 
 // Import SVG icons
 import ChatIcon from '../../assets/svg/chat.svg';
@@ -17,8 +16,8 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
 
   const getIconComponent = (routeName, color) => {
     const iconProps = { 
-      width: '90%', 
-      height: '90%', 
+      width: 50, 
+      height: 50, 
       color: color 
     };
 
@@ -108,9 +107,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
               <StyledText mini bold style={{ color: 'white' }}>20</StyledText>
             </View> */}
             
-            <View style={{ width: '90%', height: '90%' }}>
-              {getIconComponent(route.name, iconColor)}
-            </View>
+            {getIconComponent(route.name, iconColor)}
           </TouchableOpacity>
         );
       })}

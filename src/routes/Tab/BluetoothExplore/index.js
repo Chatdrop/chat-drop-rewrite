@@ -90,14 +90,17 @@ const BluetoothExplore = () => {
                 source={require("../../../assets/bluetooth-background/bg.jpg")} 
                 style={{ width: '100%', height: '100%', position: 'absolute' }}
             />
-            <View style={{ 
-                padding: styleConstants.padding * 1.5, 
-                width: '100%', 
-                height: '100%', 
-                position: 'absolute', 
-                zIndex: 99 
-            }}>
-                <View style={{ height: 115 }} />
+            <View 
+                pointerEvents="box-none"
+                style={{ 
+                    padding: styleConstants.padding * 1.5, 
+                    width: '100%', 
+                    height: '100%', 
+                    position: 'absolute', 
+                    zIndex: 99 
+                }}
+            >
+                <View style={{ height: 115 }} pointerEvents="none" />
                 <Header 
                     scanning={scanning} 
                     deviceCount={devices.length} 

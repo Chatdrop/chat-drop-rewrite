@@ -5,6 +5,11 @@ import { appStore } from "./app_store";
 const selfProfileAttributes = proxy({
     name: null,
     surname: null,
+    bio: null,
+    height: null,
+    job: null,
+    workplace: null,
+    school: null,
     birthdate: null,
     gender: null,
     genderPreference: null,
@@ -56,14 +61,17 @@ const implies = (op1, op2)=>{
 }
 
 const setupComplete = ()=>{
-    return Object.keys(selfProfileAttributes)
-        .every(key => {
-            const op = (selfProfileAttributes[key] != null && implies(typeof selfProfileAttributes[key]["length"] == "number", selfProfileAttributes[key]["length"] > 0));
+    // Required fields for setup completion
+    const requiredFields = ['name', 'surname', 'birthdate', 'gender', 'genderPreference', 'motive'];
+    
+    return requiredFields.every(key => {
+        const value = selfProfileAttributes[key];
+        let op = (value != null && implies(typeof value["length"] == "number", value["length"] > 0));
 
-            console.log(key, selfProfileAttributes[key], op, "asdfasdfaop");
+        console.log(key, value, op, "setupCheck");
 
-            return op;
-        });
+        return op;
+    });
 }
 
 export {

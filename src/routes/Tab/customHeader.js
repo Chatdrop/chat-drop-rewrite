@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, Platform, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { Image, Platform, TouchableOpacity, useWindowDimensions, View, Vibration, NativeModules } from "react-native";
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LogoSVG from '../../assets/svg/logo.svg';
 import { styleConstants } from "../../config/styleConstants.js";
@@ -10,6 +10,26 @@ import { useSnapshot } from "valtio";
 import StyledText from "../../components/StyledText/index.js";
 import { navigationRef } from "../../utils/navigationRef.js";
 import ArrowRightSVG from "../../assets/svg/arrow-right.svg";
+
+const TorchModule = NativeModules.TorchModule;
+
+// Helper function to safely toggle torch
+const toggleTorch = async (state) => {
+    try {
+        console.log('🔦 Attempting to toggle torch:', state);
+        console.log('🔦 TorchModule:', TorchModule);
+        
+        if (TorchModule && TorchModule.switchState) {
+            console.log('🔦 Calling TorchModule.switchState with:', state);
+            TorchModule.switchState(state);
+            console.log('🔦 Torch toggle called successfully');
+        } else {
+            console.log('❌ TorchModule or switchState not available');
+        }
+    } catch (error) {
+        console.error('❌ Torch error:', error);
+    }
+};
 
 export default function TabHeader({ navigation, route }) {
     const insets = useSafeAreaInsets();
@@ -36,63 +56,87 @@ export default function TabHeader({ navigation, route }) {
     })();
 
     const [isFlashActive, setIsFlashActive] = useState(false);
-    const { width, height } = useWindowDimensions();
+    const { width } = useWindowDimensions();
     const [opacity, setOpacity] = useState(1);
 
-    // Flash animation effect (simplified without torch functionality)
+    // Flash effect with real torch functionality - flickering pattern
     useEffect(() => {
         if (isFlashActive) {
+            // Haptic feedback on activation
+            Vibration.vibrate(50);
+            
+            // Turn on the torch
+            toggleTorch(true);
+            
+            // Animation and torch flicker sequence
             setOpacity(.5);
             setTimeout(() => {
                 setOpacity(1);
+                toggleTorch(true); // Flash ON
                 setTimeout(() => {
                     setOpacity(.3);
+                    toggleTorch(false); // Flash OFF
                     setTimeout(() => {
                         setOpacity(1);
+                        toggleTorch(true); // Flash ON
                         setTimeout(() => {
                             setOpacity(.6);
+                            toggleTorch(false); // Flash OFF
                             setTimeout(() => {
-                                setIsFlashActive(false);
-                                setOpacity(1);
-                            }, 250);
+                                toggleTorch(true); // Flash ON briefly
+                                setTimeout(() => {
+                                    toggleTorch(false); // Final OFF
+                                    setIsFlashActive(false);
+                                    setOpacity(1);
+                                    Vibration.vibrate(30); // Short vibration on close
+                                }, 150);
+                            }, 100);
                         }, 100);
                     }, 500);
                 }, 300);
             }, 1000);
         } else {
             setOpacity(1);
+            toggleTorch(false); // Make sure torch is off
         }
     }, [isFlashActive]);
 
     const currentRoute = getCurrentRouteName();
     const isBluetoothView = currentRoute === 'BluetoothView';
 
+    // Gradient height'i responsive hesapla
+    const gradientHeight = Platform.OS === 'ios' 
+        ? insets.top + 60 
+        : insets.top + 74;
+
     return (
         <View
             style={{
                 position: 'absolute',
-                top: Platform.OS == "android" ? -6 : 0,
+                top: 0,
                 width: '100%',
-                height: 115
+                height: gradientHeight
             }}>
-            <View style={{ flex: 1 }} >
-                <HeaderGradientSVG 
-                    width="100%" 
-                    height="100%" 
-                    style={{ position: 'absolute' }}
-                />
-            </View>
-            <View style={[{
-                paddingTop: insets.top,
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                padding: styleConstants.padding,
-                width: '100%',
-                height: 115,
-                position: 'absolute',
-                zIndex: 99
-            }, Platform.OS == "android" && { marginTop: 20 }]} >
+            <HeaderGradientSVG 
+                width="100%" 
+                height={gradientHeight} 
+                style={{ position: 'absolute', top: 0, left: 0 }}
+                preserveAspectRatio="none"
+            />
+            <View 
+                pointerEvents="box-none"
+                style={{
+                    paddingTop: insets.top,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    padding: styleConstants.padding,
+                    width: '100%',
+                    height: gradientHeight,
+                    position: 'absolute',
+                    zIndex: 99
+                }} 
+            >
                 
                 {/* Touchable Button for toggling "On/Off" or Back Button */}
                 <TouchableOpacity
@@ -130,16 +174,25 @@ export default function TabHeader({ navigation, route }) {
                 {/* Logo or Flashlight */}
                 {isBluetoothView ? (
                     <TouchableOpacity
+                        activeOpacity={0.7}
                         onPress={() => {
-                            setIsFlashActive(!isFlashActive);
+                            if (!isFlashActive) {
+                                setIsFlashActive(true);
+                            } else {
+                                // Manual turn off - immediately turn off the torch and animation
+                                toggleTorch(false);
+                                setIsFlashActive(false);
+                                setOpacity(1);
+                                Vibration.vibrate(30);
+                            }
                         }}
                         style={{
                             opacity: opacity,
                             position: 'absolute',
                             left: width / 2 - (isFlashActive ? 78 : 30),
                             right: width / 2 - (isFlashActive ? 78 : 30),
-                            top: isFlashActive ? 12 : 52,
-                            zIndex: 99
+                            top: isFlashActive ? insets.top + 12 : insets.top + 8,
+                            zIndex: 999
                         }}
                     >
                         {isFlashActive ? (

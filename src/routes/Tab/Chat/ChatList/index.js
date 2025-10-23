@@ -14,7 +14,7 @@ const mockChatData = [
     id: 1,
     first_name: "Ahmet",
     last_name: "Asilli",
-    photo_url: "https://via.placeholder.com/50",
+    photo_url: require('../../../../assets/png/friendship.png'),
     last_msg: { content: "Merhaba nasılsın?", stamp: new Date().getTime() },
     is_read: false,
     badge_count: 2
@@ -23,7 +23,7 @@ const mockChatData = [
     id: 2,
     first_name: "Zeynep",
     last_name: "Kaya",
-    photo_url: "https://via.placeholder.com/50",
+    photo_url: require('../../../../assets/png/love.png'),
     last_msg: { content: "Görüşürüz", stamp: new Date().getTime() - 3600000 },
     is_read: true,
     badge_count: 0
@@ -35,13 +35,22 @@ const mockRequestData = [
     id: 1,
     name: "Mehmet Yılmaz",
     message: "Merhaba, tanışabilir miyiz?",
-    photo: require('../../../../assets/png/friendship.png')
+    photo: require('../../../../assets/png/friendship.png'),
+    isAccepted: null
   },
   {
     id: 2,
     name: "Ayşe Demir",
     message: "Selam, nasılsın?",
-    photo: require('../../../../assets/png/love.png')
+    photo: require('../../../../assets/png/love.png'),
+    isAccepted: null
+  },
+  {
+    id: 3,
+    name: "Fatma Kaya",
+    message: "Merhaba, nasılsın?",
+    photo: require('../../../../assets/png/friendship.png'),
+    isAccepted: null
   }
 ];
 
@@ -53,11 +62,55 @@ export default function ChatList() {
   const focus = useIsFocused();
   const [loading, setLoading] = useState(false);
   const [chatList, setChatList] = useState(mockChatData);
+  const [requestList, setRequestList] = useState(mockRequestData);
 
   const chat_list_click = (userId) => {
     // Stub navigation - replace with actual navigation
     console.log('Navigate to chat with user:', userId);
     // navigation.navigate('ChatUiActual', { user_uid: userId });
+  };
+
+  const handleAcceptRequest = (item) => {
+    console.log('Chat Request - ID:', item.id, 'Accepted:', true);
+    
+    // Request'i accepted olarak işaretle
+    setRequestList(prevList => 
+      prevList.map(req => 
+        req.id === item.id ? { ...req, isAccepted: true } : req
+      )
+    );
+    
+    // İsmi ayır (first_name ve last_name)
+    const nameParts = item.name.split(' ');
+    const first_name = nameParts[0] || '';
+    const last_name = nameParts.slice(1).join(' ') || '';
+    
+    // Chat listesine ekle (unread olarak)
+    // Benzersiz ID oluştur (request ID + timestamp)
+    const uniqueId = `chat_${item.id}_${new Date().getTime()}`;
+    const newChatItem = {
+      id: uniqueId,
+      first_name: first_name,
+      last_name: last_name,
+      photo_url: item.photo,
+      last_msg: { 
+        content: item.message, 
+        stamp: new Date().getTime() 
+      },
+      is_read: false,
+      badge_count: 1
+    };
+    
+    setChatList(prevList => [newChatItem, ...prevList]);
+  };
+
+  const handleRejectRequest = (item) => {
+    console.log('Chat Request - ID:', item.id, 'Accepted:', false);
+    setRequestList(prevList => 
+      prevList.map(req => 
+        req.id === item.id ? { ...req, isAccepted: false } : req
+      )
+    );
   };
 
   useEffect(() => {
@@ -108,16 +161,19 @@ export default function ChatList() {
         showsHorizontalScrollIndicator={false} 
         style={{ flexDirection: "row", marginTop: 10 }}
       >
-        {mockRequestData.map((item) => (
-          <ChatRequest
-            key={item.id}
-            name={item.name}
-            message={item.message}
-            photo={item.photo}
-            onAccept={() => console.log(`Accepted chat with ${item.name}`)}
-            onReject={() => console.log(`Rejected chat with ${item.name}`)}
-          />
-        ))}
+        {requestList
+          .filter(item => item.isAccepted === null)
+          .map((item) => (
+            <ChatRequest
+              key={item.id}
+              id={item.id}
+              name={item.name}
+              message={item.message}
+              photo={item.photo}
+              onAccept={() => handleAcceptRequest(item)}
+              onReject={() => handleRejectRequest(item)}
+            />
+          ))}
       </ScrollView>
 
       {/* Chat List Section */}

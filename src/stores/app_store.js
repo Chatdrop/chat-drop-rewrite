@@ -7,9 +7,9 @@ import { fetchUserProfileAttributes, selfProfileAttributes, setupComplete } from
 const appStore = proxy({
     onboardingFinished: false,
     isLoading: true,
-    setupComplete:false,
-    userUid: null
-
+    setupComplete: false,
+    userUid: null,
+    isVisible: true
 });
 
 let init = false;
@@ -40,8 +40,21 @@ const appInit = async () => {
     appStore.isLoading = false;
 }
 
-const logout = ()=>{
-
+const logout = async () => {
+    try {
+        await supabase.auth.signOut();
+        appStore.userUid = null;
+        appStore.onboardingFinished = false;
+        appStore.setupComplete = false;
+        
+        // Clear profile attributes
+        Object.keys(selfProfileAttributes).forEach(key => {
+            selfProfileAttributes[key] = null;
+        });
+    } catch (error) {
+        console.error('Logout error:', error);
+        throw error;
+    }
 };
 
 export {

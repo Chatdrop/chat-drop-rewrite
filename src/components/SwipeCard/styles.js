@@ -83,7 +83,7 @@ export default swipeCardStyles = StyleSheet.create({
     },
     buttonsContainer: {
         flexDirection: 'row',
-        paddingHorizontal: 10,
+        paddingHorizontal: 0,
         width: '100%',
         marginTop: -50,
         justifyContent: 'space-around',
